@@ -58,16 +58,14 @@ def fft(xs):
 
 # Self-test
 if __name__ == '__main__':
-    # Pretty print DFT
+    # Pretty print
     def pretty(cs):
-        s = '[(%.2g,%.2g)' % (cs[0].real, cs[0].imag)
-        for c in cs[1:]:
-            s += ', (%.2g,%.2g)' % (c.real, c.imag)
-        s += "]"
-        return s
+        def helper(c): return '%.2g%+.2gi' % (c.real, c.imag)
+        return str(list(map(helper, cs)))
+
 
     # Product of 2nd and 4th cyclotomic polynomials
     xs = [1, 1, 1, 1]
 
-    print("DFT: " + pretty(dft(xs)))
-    print("FFT: " + pretty(fft(xs)))
+    print('DFT: ' + pretty(dft(xs)))
+    print('FFT: ' + pretty(fft(xs)))
