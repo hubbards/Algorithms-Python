@@ -22,7 +22,7 @@ def compute_opt(c, ws):
             if j < ws[i]:
                 memo[i][j] = w1
             else:
-                w2 = ws[i] + memo[i - 1][j - ws[i]] if i > 0 else ws[i]
+                w2 = ws[i] + (memo[i - 1][j - ws[i]] if i > 0 else 0)
                 memo[i][j] = max(w1, w2)
     return memo
 

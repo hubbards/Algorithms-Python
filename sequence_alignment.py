@@ -19,7 +19,7 @@ def compute_opt(d, a, xs, ys):
     for i, x in enumerate(xs):
         memo.append([])
         for j, y in enumerate(ys):
-            c1 = a[x + y] + memo[i - 1][j - 1] if i > 0 and j > 0 else a[x + y]
+            c1 = a[x + y] + (memo[i - 1][j - 1] if i > 0 and j > 0 else 0)
             c2 = d + memo[i - 1][j] if i > 0 else (j + 1) * d
             c3 = d + memo[i][j - 1] if j > 0 else (i + 1) * d
             memo[i].append(min(c1, c2, c3))
@@ -33,7 +33,7 @@ def find_sol(d, a, xs, ys, memo):
     i = len(xs) - 1
     j = len(ys) - 1
     while i >= 0 and j >= 0:
-        c1 = a[xs[i] + ys[j]] + memo[i - 1][j - 1] if i > 0 and j > 0 else a[xs[i] + ys[j]]
+        c1 = a[xs[i] + ys[j]] + (memo[i - 1][j - 1] if i > 0 and j > 0 else 0)
         c2 = d + memo[i - 1][j] if i > 0 else (j + 1) * d
         c3 = d + memo[i][j - 1] if j > 0 else (i + 1) * d
         if memo[i][j] == c1:
