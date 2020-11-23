@@ -1,106 +1,52 @@
-'''
-Script to test algorithm for RNA secondary structure problem.
+"""
+This module contains a dynamic programming algorithm for solving the RNA
+secondary structure problem. See section 6.5 of Algorithm Design by Kleinberg
+and Tardos.
 
-NOTE: the worst-case time complexity of compute-opt (and find-solution) is
-      O(n ** 3).
-'''
+An instance of the RNA secondary structure problem is defined by a single-
+stranded RNA molecule, i.e., a string of the characters (bases) A, C, G, and U.
+A solution is a secondary structure, i.e., a set of non-crossing, matched base
+pairs without any sharp turns. An optimal secondary structure is a secondary
+structure with maximum number of matches.
+"""
 
-def find_max(i, j, s, memo):
-  '''
-  Function to find optimal value and solution (to sub-problem) if last index
-  is paired with some index between first and last index.
+def base_pairs(x, y):
+    """
+    TODO document
+    """
+    return x == 'A' and y == 'U' or x == 'U' and y == 'A' or \
+           x == 'C' and y == 'G' or x == 'G' and y == 'C'
 
-  @param i   : first index
+def compute_opt(bs):
+    """
+    TODO document recurrence relation
+    """
+    # assert len(bs) > 5
+    memo = [[0] * (i + 5) for i in range(len(bs) - 5)]
+    for k in range(5, len(bs)):
+        for i in range(len(bs) - k):
+            j = i + k
+            v1 = memo[i][j - 1]
+            for t in range(i, j - 4):
+                if base_pairs(bs[t], bs[j]):
+                    v2 = 1 + (memo[i][t - 1] if t > i else 0) + memo[t + 1][j - 1]
+                    v1 = max(v1, v2)
+            memo[i].append(v1)
+    return memo
 
-  @param j   : last index
+def find_sol(bs, memo):
+    """
+    TODO document
+    """
+    # TODO implement
+    return []
 
-  @param s   : string for RNA sequence (characters with positive indices)
-
-  @param memo: list of optimal values for sub-problems
-
-  @return    : optimal value and solution if last index is paired with some
-               index between first and last index
-  '''
-  a1 = -1
-  k1 = -1
-  k2 = i
-  while k2 < j - 4:
-    # k2 and j satisfy "no sharp turn" condition
-    if (s[k2] == 'A' and s[j] == 'U') or (s[k2] == 'U' and s[j] == 'A') or \
-       (s[k2] == 'C' and s[j] == 'G') or (s[k2] == 'G' and s[j] == 'C'):
-      # k2 and j satisfy "base pair" condition
-      a2 = 1 + memo[i][k2 - 1] + memo[k2 + 1][j - 1]
-      if a1 < a2:
-        a1 = a2
-        k1 = k2
-    k2 = k2 + 1
-  return (k1, a1)
-
-def compute_opt(n, s):
-  '''
-  Function for algorithm that solves RNA secondary structure problem using
-  dynamic programming method.
-
-  @param n: length of RNA sequence
-
-  @param s: string for RNA sequence (characters with positive indices)
-
-  @return : list of optimal values for sub-problems
-  '''
-  memo = []
-  # initialize memo
-  for i in range(n + 1):
-    row = []
-    for j in range(n + 1):
-      row.append(0)
-    memo.append(row)
-  # bottom-up computation of optimal values, i.e., shortest intervals first
-  for k in range(5, n):
-    for i in range(1, n - k + 1):
-      # interval of length k + 1
-      j = i + k
-      a = memo[i][j - 1]
-      p = find_max(i, j, s, memo)
-      #memo[i][j] = max(a, p[1])
-      if a <= p[1]:
-        memo[i][j] = p[1]
-      else:
-        memo[i][j] = a
-  return memo
-
-def find_sol(i, j, s, memo, sol):
-  '''
-  Function to back-track through list of optimal values for sub-problems to
-  find optimal solution.
-
-  @param i   : first index
-
-  @param j   : last index
-
-  @param s   : string for RNA sequence (characters with positive indices)
-
-  @param memo: list of optimal values for sub-problems
-
-  @param sol : list of pairs in optimal solution
-  '''
-  # top-down search for optimal solution
-  if i < j - 4:
-    p = find_max(i, j, s, memo)
-    if memo[i][j] == p[1]:
-      sol.append((p[0], j))
-      find_sol(p[0] + 1, j - 1, s, memo, sol)
-      find_sol(i, p[0] - 1, s, memo, sol)
-    else:
-      find_sol(i, j - 1, s, memo, sol)
-
-# simple example if running as a program
+# Self-test
 if __name__ == '__main__':
-  # simple example
-  s = ' AUGUGGCCAU'
-  n = 10
-  memo = compute_opt(n, s)
-  sol = []
-  find_sol(1, n, s, memo, sol)
-  print 'optimal solution: ' + str(sol)
-  print 'optimal value   : ' + str(memo[1][10])
+    bs = 'ACCGGUAGU' # bs = 'AUGUGGCCAU'
 
+    memo = compute_opt(bs)
+    ss = find_sol(bs, memo)
+
+    print('single-stranded RNA molecule:' + bs)
+    print('optimal secondary structure :' + ss)
