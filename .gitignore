@@ -1,10 +1,9 @@
-# https://git-scm.com/docs/gitignore
+# .gitignore
+# Project-specific gitignore file.  See gitignore(5) manuals for more
+# information.
 
 # Compiled byte code
 *.pyc
 
 # Python cache directory, as of Python 3.2
 __pycache__
-
-# macOS system file
-.DS_Store
