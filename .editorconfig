@@ -1,4 +1,5 @@
-# https://editorconfig.org
+# .editorconfig
+# Project EditorConfig file, see https://editorconfig.org.
 
 # Top-most EditorConfig file
 root = true
